@@ -121,6 +121,7 @@
   // Glow elementi oluştur
   var glowEl = document.createElement('div');
   glowEl.style.cssText = 'position:fixed;pointer-events:none;z-index:4;border-radius:50%;width:80px;height:120px;filter:blur(18px);background:radial-gradient(ellipse, rgba(180,130,255,0.55) 0%, rgba(220,160,255,0.25) 50%, transparent 80%);transform:translate(-50%,-50%);transition:none;';
+  if(isMobile) glowEl.style.display = 'none';
   document.body.appendChild(glowEl);
 
   function letterLoop(ts){
@@ -179,11 +180,13 @@
 
 
 
+  var isMobile = /Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
+
   // PARTICLES — Retina optimized
   var canvas = document.getElementById('particleCanvas');
   var ctx = canvas.getContext('2d');
   function resize(){
-    var dpr = Math.min(window.devicePixelRatio || 1, 1.5);
+    var dpr = isMobile ? 1 : Math.min(window.devicePixelRatio || 1, 1.5);
     canvas.width  = window.innerWidth  * dpr;
     canvas.height = window.innerHeight * dpr;
     canvas.style.width  = window.innerWidth  + 'px';
@@ -318,9 +321,21 @@
     if(e.target === this) window.closeGame();
   });
 
-})();
+  // Tab gizlenince loop durdur, geri gelince başlat
+  document.addEventListener('visibilitychange', function(){
+    if(document.hidden){
+      cancelAnimationFrame(glowRafId);
+      cancelAnimationFrame(letterRafId);
+      cancelAnimationFrame(pRafId);
+    } else if(!gameState.open){
+      waveStart = performance.now();
+      glowLoop();
+      letterRafId = requestAnimationFrame(letterLoop);
+      pLoop();
+    }
+  });
 
-// APPLY MODAL
+})();
 (function(){
   function openApply(){
     var modal = document.getElementById('apply-modal');
