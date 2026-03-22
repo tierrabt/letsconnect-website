@@ -6,7 +6,9 @@
   <title>LetsConnect — Meet, Learn, Laugh & Glow Together</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;600&family=Nunito:wght@800;900&family=Outfit:wght@200;300;400&display=swap" rel="stylesheet">
+  <!-- Sadece kullanılan weight'ler yükleniyor: 12 → 6 font dosyası -->
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;600&family=Nunito:wght@800;900&family=Outfit:wght@200;300&display=swap" rel="stylesheet">
+
   <link rel="icon" type="image/png" href="./favicon.png">
   <link rel="stylesheet" href="style.css">
 </head>
@@ -15,147 +17,32 @@
 <div class="cursor-glow" id="cursorGlow"></div>
 <div class="cursor-dot" id="cursorDot"></div>
 
-<!-- TICKER -->
 <div id="welcome-ticker"><div id="ticker-inner"></div></div>
 
-<!-- NAVBAR -->
-<nav class="navbar" id="navbar">
-  <a class="nav-logo" href="#hero">
-    <img src="./renklilogo.png" alt="LetsConnect" class="nav-logo-img">
-  </a>
-  <div class="nav-links">
-    <a class="nav-link" href="#events">Events</a>
-    <a class="nav-link" href="#join">Join Us</a>
-    <a class="nav-link nav-x" href="https://x.com/Letsconnectco" target="_blank" rel="noopener noreferrer">𝕏</a>
-  </div>
-</nav>
-
-<!-- BG LAYERS -->
 <div class="bg-layer"></div>
 <canvas class="particle-canvas" id="particleCanvas"></canvas>
 <div class="grain-overlay"></div>
 
-<!-- ═══════════════ HERO ═══════════════ -->
-<section class="section hero-section" id="hero">
+<div class="main-content">
   <div class="main-text" id="mainText" aria-label="Lets Connect"></div>
   <div class="divider"></div>
   <p class="tagline">Meet · Learn · Laugh · Glow Together</p>
 
-  <div class="hero-stats">
-    <div class="stat-item">
-      <span class="stat-num">300+</span>
-      <span class="stat-label">Curated Members</span>
-    </div>
-    <div class="stat-sep"></div>
-    <div class="stat-item">
-      <span class="stat-num">3</span>
-      <span class="stat-label">Events in HK</span>
-    </div>
-    <div class="stat-sep"></div>
-    <div class="stat-item">
-      <span class="stat-num">🌏</span>
-      <span class="stat-label">Hong Kong Based</span>
-    </div>
+  <div class="buttons-row">
+    <a href="https://x.com/Letsconnectco" target="_blank" rel="noopener noreferrer" class="btn-main">Follow on X</a>
+    <a href="https://www.linkedin.com/company/letsconnectco/" target="_blank" rel="noopener noreferrer" class="btn-main">Follow on LinkedIn</a>
   </div>
 
-  <a class="scroll-down" href="#events">
-    <span>See our events</span>
-    <span class="scroll-arrow">↓</span>
-  </a>
-
-  <button onclick="openGame()" class="btn-apply" style="margin-top:1.5rem;opacity:0;transform:translateY(20px);animation:fadeUp 1.8s cubic-bezier(0.23,1,0.32,1) 4.2s forwards;">
-    🎮 Play Game
-  </button>
-</section>
-
-<!-- ═══════════════ EVENTS ═══════════════ -->
-<section class="section events-section" id="events">
-  <div class="section-inner">
-    <p class="section-label">Past Events</p>
-    <h2 class="section-title">We show up.<br><em>In real life.</em></h2>
-    <p class="section-sub">Three events in Hong Kong — real conversations, real connections, real glow. Every time.</p>
-
-    <div class="events-grid">
-
-      <a href="#" target="_blank" rel="noopener noreferrer" class="event-card">
-        <div class="event-card-inner">
-          <div class="event-num">01</div>
-          <div class="event-badge">🇭🇰 Hong Kong</div>
-          <div class="event-name">LetsConnect HK<br>Vol. 1</div>
-          <div class="event-footer">
-            <span class="event-date">2024</span>
-            <span class="event-cta">View on Luma →</span>
-          </div>
-        </div>
-        <div class="event-glow"></div>
-      </a>
-
-      <a href="#" target="_blank" rel="noopener noreferrer" class="event-card">
-        <div class="event-card-inner">
-          <div class="event-num">02</div>
-          <div class="event-badge">🇭🇰 Hong Kong</div>
-          <div class="event-name">LetsConnect HK<br>Vol. 2</div>
-          <div class="event-footer">
-            <span class="event-date">2024</span>
-            <span class="event-cta">View on Luma →</span>
-          </div>
-        </div>
-        <div class="event-glow"></div>
-      </a>
-
-      <a href="#" target="_blank" rel="noopener noreferrer" class="event-card">
-        <div class="event-card-inner">
-          <div class="event-num">03</div>
-          <div class="event-badge">🇭🇰 Hong Kong</div>
-          <div class="event-name">LetsConnect HK<br>Vol. 3</div>
-          <div class="event-footer">
-            <span class="event-date">2025</span>
-            <span class="event-cta">View on Luma →</span>
-          </div>
-        </div>
-        <div class="event-glow"></div>
-      </a>
-
-    </div>
+  <div class="buttons-row" style="margin-top:1rem;">
+    <button class="btn-ghost" onclick="openGame()">🎮 Play Game</button>
   </div>
-</section>
 
-<!-- ═══════════════ JOIN ═══════════════ -->
-<section class="section join-section" id="join">
-  <div class="section-inner join-inner">
-    <p class="section-label">Apply to Join</p>
-    <h2 class="section-title">Not for everyone.<br><em>Made for you.</em></h2>
-    <p class="section-sub">We don't build crowds. We build real connections.<br>Every member is handpicked. Apply and tell us who you are.</p>
 
-    <div class="join-pills">
-      <span class="pill">🌱 Growth-minded</span>
-      <span class="pill">💡 Web3 curious</span>
-      <span class="pill">🤝 Community first</span>
-      <span class="pill">✨ No fake energy</span>
-    </div>
+</div>
 
-    <button onclick="openApply()" class="btn-apply">
-      Apply to Join
-      <span class="btn-arrow">→</span>
-    </button>
+<div class="bottom-accent"></div>
+<div class="footer">© 2026 LetsConnect</div>
 
-    <p class="join-note">We review every application personally.</p>
-  </div>
-</section>
-
-<!-- FOOTER -->
-<footer class="site-footer">
-  <div class="footer-logo">
-    <img src="./renklilogo.png" alt="LetsConnect" class="footer-logo-img">
-  </div>
-  <div class="footer-links">
-    <a href="https://x.com/Letsconnectco" target="_blank" rel="noopener noreferrer">𝕏 Twitter</a>
-    <a href="https://www.linkedin.com/company/letsconnectco/" target="_blank" rel="noopener noreferrer">LinkedIn</a>
-  </div>
-  <p class="footer-copy">© 2026 LetsConnect · Hong Kong</p>
-</footer>
-
-<!-- POPUP -->
 <div class="popup-overlay" id="popupOverlay">
   <div class="popup-box" id="popupBox">
     <div class="popup-corner tl"></div>
@@ -169,64 +56,14 @@
   </div>
 </div>
 
-<!-- APPLY MODAL -->
-<div id="apply-modal" style="display:none;position:fixed;inset:0;z-index:10000;background:rgba(180,150,230,0.25);align-items:center;justify-content:center;">
-  <div class="apply-box" id="applyBox">
-    <button onclick="closeApply()" class="apply-close">✕</button>
-
-    <div id="apply-form-wrap">
-      <p class="section-label" style="margin-bottom:0.5rem;">Apply to Join</p>
-      <h3 style="font-family:'Cormorant Garamond',serif;font-weight:300;font-size:2rem;color:#2D1B4E;margin-bottom:0.4rem;">Tell us about you<em style="font-style:italic;background:linear-gradient(135deg,#8B5EC8,#C070E0);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;">.</em></h3>
-      <p style="font-size:0.82rem;color:rgba(80,50,120,0.5);margin-bottom:1.8rem;font-weight:300;">We review every application personally.</p>
-
-      <form id="applyForm">
-        <input type="hidden" name="access_key" value="3c043984-34ed-41f3-9824-45b97fa40292">
-        <input type="hidden" name="subject" value="New LetsConnect Application">
-
-        <div class="apply-field">
-          <label class="apply-label">X Username</label>
-          <input type="text" name="x_username" placeholder="@username" class="apply-input" required>
-        </div>
-
-        <div class="apply-field">
-          <label class="apply-label">Email Address</label>
-          <input type="email" name="email" placeholder="you@example.com" class="apply-input" required>
-        </div>
-
-        <div class="apply-field">
-          <label class="apply-label">Tell us about yourself</label>
-          <textarea name="about" placeholder="Who are you, what do you do, why do you want to join?" class="apply-textarea" rows="3" required></textarea>
-        </div>
-
-        <div class="apply-field">
-          <label class="apply-label">Do you have Web3 experience?</label>
-          <div class="apply-toggle" id="web3Toggle">
-            <button type="button" class="toggle-btn active" id="toggleYes" onclick="setWeb3('Yes')">Yes</button>
-            <button type="button" class="toggle-btn" id="toggleNo" onclick="setWeb3('No')">No</button>
-          </div>
-          <input type="hidden" name="web3_experience" id="web3Value" value="Yes">
-        </div>
-
-        <button type="submit" class="btn-apply" style="width:100%;justify-content:center;margin-bottom:0;" id="applySubmitBtn">
-          Send Application <span class="btn-arrow">→</span>
-        </button>
-      </form>
-    </div>
-
-    <div id="apply-success" style="display:none;text-align:center;padding:2rem 0;">
-      <div style="font-size:3rem;margin-bottom:1rem;">🎉</div>
-      <h3 style="font-family:'Cormorant Garamond',serif;font-weight:300;font-size:2rem;color:#2D1B4E;margin-bottom:0.8rem;">Application sent!</h3>
-      <p style="font-size:0.9rem;color:rgba(80,50,120,0.6);font-weight:300;line-height:1.7;">We'll review your application and get back to you soon.<br>Stay glowing ✨</p>
-    </div>
-  </div>
-</div>
 
 <!-- GAME MODAL -->
-<div id="game-modal" style="display:none;position:fixed;inset:0;z-index:10000;background:rgba(0,0,0,0.95);align-items:center;justify-content:center;">
-  <button onclick="closeGame()" style="position:absolute;top:1.5rem;right:1.5rem;background:rgba(139,94,200,0.15);border:1px solid rgba(139,94,200,0.3);color:#fff;width:44px;height:44px;border-radius:50%;font-size:1.2rem;cursor:pointer;z-index:10001;transition:background 0.2s;">✕</button>
-  <iframe id="game-iframe" loading="lazy" style="border:none;border-radius:20px;box-shadow:0 0 60px rgba(139,94,200,0.2);width:420px;height:680px;max-width:95vw;max-height:90vh;display:block;margin:auto;"></iframe>
+<div id="game-modal" style="display:none;position:fixed;inset:0;z-index:10000;background:rgba(0,0,0,0.95);backdrop-filter:blur(10px);align-items:center;justify-content:center;">
+  <button onclick="closeGame()" style="position:absolute;top:1.5rem;right:1.5rem;background:rgba(255,110,180,0.15);border:1px solid rgba(255,110,180,0.3);color:#fff;width:44px;height:44px;border-radius:50%;font-size:1.2rem;cursor:pointer;z-index:10001;transition:background 0.2s;" onmouseover="this.style.background='rgba(255,110,180,0.4)'" onmouseout="this.style.background='rgba(255,110,180,0.15)'">✕</button>
+  <iframe id="game-iframe" loading="lazy" style="border:none;border-radius:20px;box-shadow:0 0 60px rgba(255,110,180,0.2);width:420px;height:680px;max-width:95vw;max-height:90vh;"></iframe>
 </div>
 
 <script src="script.js" defer></script>
+
 </body>
 </html>

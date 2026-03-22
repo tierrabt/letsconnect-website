@@ -25,19 +25,17 @@
   glowLoop();
 
   // LETTERS
-  var text = "LET'S CONNECT";
+  var text = 'LETS CONNECT';
   var container = document.getElementById('mainText');
   var BASE_DELAY = 1.0, INTERVAL = 0.09;
   var letterEls = [];
   text.split('').forEach(function(ch, i){
     var el = document.createElement('span');
-    var isSpace = ch === ' ';
-    var isApostrophe = ch === "'";
-    el.className = 'main-letter' + (isSpace ? ' space' : '') + (isApostrophe ? ' apostrophe' : '');
-    el.textContent = (isSpace || isApostrophe) ? '' : ch;
+    el.className = 'main-letter' + (ch===' ' ? ' space' : '');
+    el.textContent = ch===' ' ? '' : ch;
     el.style.animationDelay = (BASE_DELAY + i*INTERVAL)+'s, 0s';
     container.appendChild(el);
-    letterEls.push({el:el, isSpace:isSpace || isApostrophe});
+    letterEls.push({el:el, isSpace:ch===' '});
   });
   var totalTime = (BASE_DELAY + text.length*INTERVAL + 1)*1000;
   var lettersReady = false;
@@ -48,20 +46,19 @@
     lettersReady = true;
   }, totalTime);
 
-  // LET'S CONNECT karakter indexleri:
-  // 0:L 1:E 2:T 3:' 4:S 5:  6:C 7:O 8:N 9:N 10:E 11:C 12:T
+  // LETTER PHRASES
   var phrases = {
     0:  { initial:'L', text:'Ladies first — always.\nIn Web3, women lead the way. Always have, always will. 🌸' },
     1:  { initial:'E', text:'Early is everything.\nYou found us before the crowd. That makes you OG. ✨' },
     2:  { initial:'T', text:'Together we glow.\nThe real alpha? Community. Build together, win together. 💫' },
-    4:  { initial:'S', text:'She who connects, wins.\nEvery great Web3 project starts with the right people. 🚀' },
-    6:  { initial:'C', text:'Community is the real alpha.\nNot a wallet. Not a token. The people. Always. 💜' },
-    7:  { initial:'O', text:'On-chain and unstoppable.\nEvery step you take is forever on the blockchain. ⛓️' },
-    8:  { initial:'N', text:'NGMI? Not here — WAGMI.\nWe All Gonna Make It. Especially us. 🩷' },
-    9:  { initial:'N', text:'NFTs, DAOs, DeFi — yours.\nThis space was built for everyone. Own it. 👑' },
-    10: { initial:'E', text:'Empowered women empower women.\nThat\'s the LetsConnect way. Always. 🌍' },
-    11: { initial:'C', text:'Connect & grow, every day.\nYour next collab is one click away. Find her here. ✦' },
-    12: { initial:'T', text:'The future is feminine & onchain.\nWe\'re not coming — we\'re already here. 💅' },
+    3:  { initial:'S', text:'She who connects, wins.\nEvery great Web3 project starts with the right people. 🚀' },
+    5:  { initial:'C', text:'Community is the real alpha.\nNot a wallet. Not a token. The people. Always. 💜' },
+    6:  { initial:'O', text:'On-chain and unstoppable.\nEvery step you take is forever on the blockchain. ⛓️' },
+    7:  { initial:'N', text:'NGMI? Not here — WAGMI.\nWe All Gonna Make It. Especially us. 🩷' },
+    8:  { initial:'N', text:'NFTs, DAOs, DeFi — yours.\nThis space was built for everyone. Own it. 👑' },
+    9:  { initial:'E', text:'Empowered women empower women.\nThat\'s the LetsConnect way. Always. 🌍' },
+    10: { initial:'C', text:'Connect & grow, every day.\nYour next collab is one click away. Find her here. ✦' },
+    11: { initial:'T', text:'The future is feminine & onchain.\nWe\'re not coming — we\'re already here. 💅' },
   };
 
   var overlay      = document.getElementById('popupOverlay');
@@ -112,82 +109,42 @@
     });
   }, totalTime);
 
-  // LETTER MOUSE REPEL + WAVE (glow ile senkron)
+  // LETTER MOUSE REPEL
   var letterRafId = null;
   var REPEL_R = 150, PUSH_S = 18;
-  var WAVE_INTERVAL = 6000; // 6 saniyede bir geçiş — yavaş
-  var waveStart = performance.now();
-
-  // Glow elementi oluştur
-  var glowEl = document.createElement('div');
-  glowEl.style.cssText = 'position:fixed;pointer-events:none;z-index:4;border-radius:50%;width:80px;height:120px;filter:blur(18px);background:radial-gradient(ellipse, rgba(180,130,255,0.55) 0%, rgba(220,160,255,0.25) 50%, transparent 80%);transform:translate(-50%,-50%);transition:none;';
-  if(isMobile) glowEl.style.display = 'none';
-  document.body.appendChild(glowEl);
-
-  function letterLoop(ts){
-    var waveElapsed = (ts - waveStart) % WAVE_INTERVAL;
-    var progress = waveElapsed / WAVE_INTERVAL; // 0 → 1
-
+  function letterLoop(){
     if(lettersReady){
-      // Harflerin sol ve sağ kenarını bul
-      var firstR = letterEls[0].el.getBoundingClientRect();
-      var lastEl = letterEls[letterEls.length-1];
-      var lastR = lastEl.el.getBoundingClientRect();
-      var startX = firstR.left;
-      var endX = lastR.right;
-      var midY = firstR.top + firstR.height / 2;
-
-      // Glow X pozisyonu: startX'ten endX'e
-      var glowX = startX + (endX - startX) * progress;
-      glowEl.style.left = glowX + 'px';
-      glowEl.style.top = midY + 'px';
-      glowEl.style.opacity = progress < 0.05 || progress > 0.95 ? '0' : '1';
-
       letterEls.forEach(function(item){
         if(item.isSpace) return;
         var r = item.el.getBoundingClientRect();
-        var cx = r.left + r.width / 2;
-        var cy = r.top + r.height / 2;
-        var dx = mouseX - cx, dy = mouseY - cy;
-        var dist = Math.sqrt(dx*dx + dy*dy);
-
-        var repelX = 0, repelY = 0, sc = 1;
+        var cx = r.left+r.width/2, cy = r.top+r.height/2;
+        var dx = mouseX-cx, dy = mouseY-cy;
+        var dist = Math.sqrt(dx*dx+dy*dy);
         if(dist < REPEL_R){
-          var intensity = (1 - dist/REPEL_R); intensity *= intensity;
-          var angle = Math.atan2(dy, dx);
-          repelX = -Math.cos(angle) * intensity * PUSH_S;
-          repelY = -Math.sin(angle) * intensity * PUSH_S;
-          sc = 1 + intensity * 0.2;
+          var intensity = (1-dist/REPEL_R); intensity *= intensity;
+          var angle = Math.atan2(dy,dx);
+          var px = -Math.cos(angle)*intensity*PUSH_S;
+          var py = -Math.sin(angle)*intensity*PUSH_S;
+          var sc = 1+intensity*0.2;
+          item.el.style.transform = 'translate('+px.toFixed(1)+'px,'+py.toFixed(1)+'px) scale('+sc.toFixed(3)+')';
           item.el.classList.add('letter-hover');
         } else {
+          item.el.style.transform = '';
           item.el.classList.remove('letter-hover');
         }
-
-        // Glow bu harfin tam üzerinde mi?
-        var glowDist = Math.abs(glowX - cx);
-        var waveY = 0;
-        if(glowDist < 50){
-          var t = 1 - (glowDist / 50);
-          waveY = -Math.sin(t * Math.PI) * 14;
-        }
-
-        item.el.style.transform = 'translate(' + repelX.toFixed(1) + 'px,' + (repelY + waveY).toFixed(1) + 'px) scale(' + sc.toFixed(3) + ')';
       });
     }
     letterRafId = requestAnimationFrame(letterLoop);
   }
-  letterLoop(performance.now());
+  letterLoop();
 
 
-
-  var isMobile = /Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
 
   // PARTICLES — Retina optimized
   var canvas = document.getElementById('particleCanvas');
   var ctx = canvas.getContext('2d');
-  var resizeTimer = null;
   function resize(){
-    var dpr = isMobile ? 1 : Math.min(window.devicePixelRatio || 1, 1.5);
+    var dpr = Math.min(window.devicePixelRatio || 1, 1.5);
     canvas.width  = window.innerWidth  * dpr;
     canvas.height = window.innerHeight * dpr;
     canvas.style.width  = window.innerWidth  + 'px';
@@ -195,13 +152,9 @@
     ctx.setTransform(1, 0, 0, 1, 0, 0);
     ctx.scale(dpr, dpr);
   }
-  resize();
-  window.addEventListener('resize', function(){
-    clearTimeout(resizeTimer);
-    resizeTimer = setTimeout(resize, 150);
-  });
+  resize(); window.addEventListener('resize', resize);
 
-  var pColors = [[169,125,232],[220,160,210],[139,94,200],[195,155,240],[232,192,225]];
+  var pColors = [[255,110,180],[199,125,255],[79,195,247],[255,209,102],[107,203,119]];
   var particles = [];
   for(var i=0; i<50; i++){
     var c = pColors[Math.floor(Math.random()*pColors.length)];
@@ -252,7 +205,7 @@
           if(md<180) lo*=1+(1-md/180)*3;
           ctx.beginPath(); ctx.moveTo(particles[ci].x,particles[ci].y);
           ctx.lineTo(particles[cj].x,particles[cj].y);
-          ctx.strokeStyle='rgba(169,125,232,'+lo.toFixed(4)+')';
+          ctx.strokeStyle='rgba(255,110,180,'+lo.toFixed(4)+')';
           ctx.lineWidth=0.5; ctx.stroke();
         }
       }
@@ -267,15 +220,15 @@
     var angle=Math.random()*Math.PI*2, speed=Math.random()*100+40;
     var tx=Math.cos(angle)*speed, ty=Math.sin(angle)*speed;
     var size=Math.random()*5+2, dur=Math.random()*800+400;
-    var colors=['#8B5EC8','#C9A8F0','#E0A0C8','#A070E0','#D4B0F0'];
+    var colors=['#FF6EB4','#C77DFF','#4FC3F7','#FFD93D','#6BCB77'];
     var col=colors[Math.floor(Math.random()*colors.length)];
     p.style.cssText='left:'+ox+'px;top:'+oy+'px;width:'+size+'px;height:'+size+'px;background:'+col+';box-shadow:0 0 '+(size*2)+'px '+col+';transform:translate(-50%,-50%);';
     document.body.appendChild(p);
     var a=p.animate([
       {transform:'translate(-50%,-50%) scale(1)',opacity:1},
       {transform:'translate(calc(-50% + '+tx+'px),calc(-50% + '+ty+'px)) scale(0)',opacity:0}
-    ],{duration:dur,easing:'cubic-bezier(0.23,1,0.32,1)'});
-    a.onfinish=function(){ a.cancel(); p.remove(); };
+    ],{duration:dur,easing:'cubic-bezier(0.23,1,0.32,1)',fill:'forwards'});
+    a.onfinish=function(){ p.remove(); };
   }
   document.addEventListener('click', function(e){
     for(var i=0; i<12; i++) burst(e.clientX, e.clientY);
@@ -288,7 +241,6 @@
     cancelAnimationFrame(glowRafId);
     cancelAnimationFrame(letterRafId);
     cancelAnimationFrame(pRafId);
-    glowEl.style.opacity = '0';
     letterEls.forEach(function(item){
       if(!item.isSpace){ item.el.style.transform=''; item.el.classList.remove('letter-hover'); }
     });
@@ -298,9 +250,8 @@
     cancelAnimationFrame(glowRafId);
     cancelAnimationFrame(letterRafId);
     cancelAnimationFrame(pRafId);
-    waveStart = performance.now(); // glow animasyonunu sıfırla
     glowLoop();
-    letterRafId = requestAnimationFrame(letterLoop);
+    letterLoop();
     pLoop();
   }
 
@@ -310,10 +261,7 @@
     pauseAllLoops();
     document.body.classList.add('game-open');
     document.getElementById('game-iframe').src = 'game.html';
-    var modal = document.getElementById('game-modal');
-    modal.style.display = 'flex';
-    modal.style.alignItems = 'center';
-    modal.style.justifyContent = 'center';
+    document.getElementById('game-modal').style.display = 'flex';
   };
 
   window.closeGame = function(){
@@ -329,85 +277,4 @@
     if(e.target === this) window.closeGame();
   });
 
-  // Tab gizlenince loop durdur, geri gelince başlat
-  document.addEventListener('visibilitychange', function(){
-    if(document.hidden){
-      cancelAnimationFrame(glowRafId);
-      cancelAnimationFrame(letterRafId);
-      cancelAnimationFrame(pRafId);
-    } else if(!gameState.open){
-      waveStart = performance.now();
-      glowLoop();
-      letterRafId = requestAnimationFrame(letterLoop);
-      pLoop();
-    }
-  });
-
-})();
-(function(){
-  function openApply(){
-    var modal = document.getElementById('apply-modal');
-    modal.style.display = 'flex';
-    document.getElementById('apply-form-wrap').style.display = 'block';
-    document.getElementById('apply-success').style.display = 'none';
-    document.getElementById('applyForm').reset();
-    setWeb3('Yes');
-  }
-  function closeApply(){
-    document.getElementById('apply-modal').style.display = 'none';
-  }
-  function setWeb3(val){
-    document.getElementById('web3Value').value = val;
-    document.getElementById('toggleYes').classList.toggle('active', val === 'Yes');
-    document.getElementById('toggleNo').classList.toggle('active', val === 'No');
-  }
-
-  document.getElementById('applyForm').addEventListener('submit', function(e){
-    e.preventDefault();
-    var btn = document.getElementById('applySubmitBtn');
-    btn.textContent = 'Sending...';
-    btn.style.opacity = '0.7';
-    btn.disabled = true;
-
-    var data = new FormData(this);
-    fetch('https://api.web3forms.com/submit', {
-      method:'POST',
-      body: data
-    })
-    .then(function(res){ return res.json(); })
-    .then(function(res){
-      if(res.success){
-        document.getElementById('apply-form-wrap').style.display = 'none';
-        document.getElementById('apply-success').style.display = 'block';
-      } else {
-        alert('Something went wrong. Please try again.');
-        btn.textContent = 'Send Application →';
-        btn.style.opacity = '1';
-        btn.disabled = false;
-      }
-    })
-    .catch(function(){
-      alert('Something went wrong. Please try again.');
-      btn.textContent = 'Send Application →';
-      btn.style.opacity = '1';
-      btn.disabled = false;
-    });
-  });
-
-  // Overlay'e tıklayınca kapat
-  document.getElementById('apply-modal').addEventListener('click', function(e){
-    if(e.target === this) closeApply();
-  });
-
-  window.openApply = openApply;
-  window.closeApply = closeApply;
-  window.setWeb3 = setWeb3;
-})();
-(function(){
-  var navbar = document.getElementById('navbar');
-  if(!navbar) return;
-  window.addEventListener('scroll', function(){
-    if(window.scrollY > 20) navbar.classList.add('scrolled');
-    else navbar.classList.remove('scrolled');
-  }, { passive:true });
 })();
