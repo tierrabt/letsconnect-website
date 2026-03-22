@@ -185,6 +185,7 @@
   // PARTICLES — Retina optimized
   var canvas = document.getElementById('particleCanvas');
   var ctx = canvas.getContext('2d');
+  var resizeTimer = null;
   function resize(){
     var dpr = isMobile ? 1 : Math.min(window.devicePixelRatio || 1, 1.5);
     canvas.width  = window.innerWidth  * dpr;
@@ -194,7 +195,11 @@
     ctx.setTransform(1, 0, 0, 1, 0, 0);
     ctx.scale(dpr, dpr);
   }
-  resize(); window.addEventListener('resize', resize);
+  resize();
+  window.addEventListener('resize', function(){
+    clearTimeout(resizeTimer);
+    resizeTimer = setTimeout(resize, 150);
+  });
 
   var pColors = [[169,125,232],[220,160,210],[139,94,200],[195,155,240],[232,192,225]];
   var particles = [];
@@ -269,8 +274,8 @@
     var a=p.animate([
       {transform:'translate(-50%,-50%) scale(1)',opacity:1},
       {transform:'translate(calc(-50% + '+tx+'px),calc(-50% + '+ty+'px)) scale(0)',opacity:0}
-    ],{duration:dur,easing:'cubic-bezier(0.23,1,0.32,1)',fill:'forwards'});
-    a.onfinish=function(){ p.remove(); };
+    ],{duration:dur,easing:'cubic-bezier(0.23,1,0.32,1)'});
+    a.onfinish=function(){ a.cancel(); p.remove(); };
   }
   document.addEventListener('click', function(e){
     for(var i=0; i<12; i++) burst(e.clientX, e.clientY);
