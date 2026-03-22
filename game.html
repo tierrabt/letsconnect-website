@@ -127,8 +127,11 @@ var W = 400, H = 600;
 canvas.style.width  = W + 'px';
 canvas.style.height = H + 'px';
 
-// ── DPR scaling: sharper on Retina, capped at 1.5x ───────
-var DPR = Math.min(window.devicePixelRatio || 1, 1.5);
+// ── Mobile detection ──────────────────────
+var isMobile = /Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
+
+// ── DPR scaling: mobilde 1, masaüstünde max 1.5x ─────────
+var DPR = isMobile ? 1 : Math.min(window.devicePixelRatio || 1, 1.5);
 canvas.width  = W * DPR;
 canvas.height = H * DPR;
 ctx.setTransform(1, 0, 0, 1, 0, 0);
@@ -142,9 +145,11 @@ var lastPipeFrame=0;
 var lives=1, maxLives=1;
 
 var COLORS=['#ffffff','#ff6eb4','#b44fff','#4fffd4','#ffe14f','#6fff8e'];
+var STAR_COUNT = isMobile ? 40 : 120;
+var SPARKLE_COUNT = isMobile ? 6 : 18;
 var stars=[], sparkles=[];
-for(var _i=0;_i<120;_i++) stars.push({x:Math.random()*W,y:Math.random()*H,r:Math.random()*1.8+0.2,color:COLORS[Math.floor(Math.random()*COLORS.length)],alpha:Math.random(),twinkle:Math.random()*Math.PI*2});
-for(var _i=0;_i<18;_i++) sparkles.push({x:Math.random()*W,y:Math.random()*H,size:Math.random()*6+3,color:COLORS[Math.floor(Math.random()*COLORS.length)],alpha:Math.random(),phase:Math.random()*Math.PI*2,vx:(Math.random()-0.5)*0.3,vy:-Math.random()*0.4-0.1});
+for(var _i=0;_i<STAR_COUNT;_i++) stars.push({x:Math.random()*W,y:Math.random()*H,r:Math.random()*1.8+0.2,color:COLORS[Math.floor(Math.random()*COLORS.length)],alpha:Math.random(),twinkle:Math.random()*Math.PI*2});
+for(var _i=0;_i<SPARKLE_COUNT;_i++) sparkles.push({x:Math.random()*W,y:Math.random()*H,size:Math.random()*6+3,color:COLORS[Math.floor(Math.random()*COLORS.length)],alpha:Math.random(),phase:Math.random()*Math.PI*2,vx:(Math.random()-0.5)*0.3,vy:-Math.random()*0.4-0.1});
 
 // ── Themes ─────────────────────────────────────────────────
 var selectedTheme=0;
@@ -546,14 +551,22 @@ function drawPipe(pipe) {
     pipe._tgX=pipe.x; pipe._tgTheme=selectedTheme;
   }
   ctx.fillStyle=pipe._tg;ctx.beginPath();ctx.roundRect(pipe.x,0,PIPE_W,pipe.topH,[0,0,8,8]);ctx.fill();
-  ctx.save();ctx.shadowColor=th.pipeGlow1;ctx.shadowBlur=16;
-  ctx.fillStyle=pipe._cg1;ctx.beginPath();ctx.roundRect(pipe.x-6,pipe.topH-22,PIPE_W+12,22,[0,0,8,8]);ctx.fill();
-  ctx.restore();
+  if(!isMobile){
+    ctx.save();ctx.shadowColor=th.pipeGlow1;ctx.shadowBlur=16;
+    ctx.fillStyle=pipe._cg1;ctx.beginPath();ctx.roundRect(pipe.x-6,pipe.topH-22,PIPE_W+12,22,[0,0,8,8]);ctx.fill();
+    ctx.restore();
+  } else {
+    ctx.fillStyle=pipe._cg1;ctx.beginPath();ctx.roundRect(pipe.x-6,pipe.topH-22,PIPE_W+12,22,[0,0,8,8]);ctx.fill();
+  }
   var botY=pipe.topH+PIPE_GAP;
   ctx.fillStyle=pipe._tg;ctx.beginPath();ctx.roundRect(pipe.x,botY,PIPE_W,H-botY,[8,8,0,0]);ctx.fill();
-  ctx.save();ctx.shadowColor=th.pipeGlow3;ctx.shadowBlur=16;
-  ctx.fillStyle=pipe._cg2;ctx.beginPath();ctx.roundRect(pipe.x-6,botY,PIPE_W+12,22,[8,8,0,0]);ctx.fill();
-  ctx.restore();
+  if(!isMobile){
+    ctx.save();ctx.shadowColor=th.pipeGlow3;ctx.shadowBlur=16;
+    ctx.fillStyle=pipe._cg2;ctx.beginPath();ctx.roundRect(pipe.x-6,botY,PIPE_W+12,22,[8,8,0,0]);ctx.fill();
+    ctx.restore();
+  } else {
+    ctx.fillStyle=pipe._cg2;ctx.beginPath();ctx.roundRect(pipe.x-6,botY,PIPE_W+12,22,[8,8,0,0]);ctx.fill();
+  }
   ctx.save();ctx.globalAlpha=0.12;
   var botY2=pipe.topH+PIPE_GAP;
   var pg=ctx.createLinearGradient(pipe.x,pipe.topH,pipe.x,botY2);
@@ -714,8 +727,8 @@ function drawMoonFairyOn(cx,x,y,r,phase) {
 function drawCharacter() {
   if(dying && Math.floor(frame/4)%2===0) return;
 
-  // Trail güncelle
-  if(started && gameRunning) {
+  // Trail güncelle — mobilde kapalı (performans)
+  if(started && gameRunning && !isMobile) {
     trail.push({x:bird.x, y:bird.y, alpha:0.45, wingPhase:bird.wingPhase});
     if(trail.length>5) trail.shift();
   } else {

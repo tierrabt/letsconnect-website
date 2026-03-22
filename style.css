@@ -535,6 +535,17 @@ body {
   /* Tıklanabilir alanları büyüt */
   .nav-link, .nav-x { min-height:44px; display:flex; align-items:center; }
   .toggle-btn { min-height:44px; }
+
+  /* Performans: backdrop-filter mobilde kapat */
+  .navbar,
+  .hero-stats,
+  .event-card,
+  .pill,
+  .popup-box,
+  .apply-box {
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+  }
 }
 
 /* iPhone SE ve küçük ekranlar */
