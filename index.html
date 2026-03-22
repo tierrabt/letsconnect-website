@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>LetsConnect — Meet, Learn, Laugh & Glow Together</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <!-- Sadece kullanılan weight'ler yükleniyor: 12 → 6 font dosyası -->
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;600&family=Nunito:wght@800;900&family=Outfit:wght@200;300&display=swap" rel="stylesheet">
+
+  <link rel="icon" type="image/png" href="./favicon.png">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<div class="cursor-glow" id="cursorGlow"></div>
+<div class="cursor-dot" id="cursorDot"></div>
+
+<div id="welcome-ticker"><div id="ticker-inner"></div></div>
+
+<div class="bg-layer"></div>
+<canvas class="particle-canvas" id="particleCanvas"></canvas>
+<div class="grain-overlay"></div>
+
+<div class="main-content">
+  <div class="main-text" id="mainText" aria-label="Lets Connect"></div>
+  <div class="divider"></div>
+  <p class="tagline">Meet · Learn · Laugh · Glow Together</p>
+
+  <div class="buttons-row">
+    <a href="https://x.com/Letsconnectco" target="_blank" rel="noopener noreferrer" class="btn-main">Follow on X</a>
+    <a href="https://www.linkedin.com/company/letsconnectco/" target="_blank" rel="noopener noreferrer" class="btn-main">Follow on LinkedIn</a>
+  </div>
+
+  <div class="buttons-row" style="margin-top:1rem;">
+    <button class="btn-ghost" onclick="openGame()">🎮 Play Game</button>
+  </div>
+
+
+</div>
+
+<div class="bottom-accent"></div>
+<div class="footer">© 2026 LetsConnect</div>
+
+<div class="popup-overlay" id="popupOverlay">
+  <div class="popup-box" id="popupBox">
+    <div class="popup-corner tl"></div>
+    <div class="popup-corner tr"></div>
+    <div class="popup-corner bl"></div>
+    <div class="popup-corner br"></div>
+    <div class="popup-initial" id="popupInitial"></div>
+    <div class="popup-text" id="popupText"></div>
+    <div class="popup-hint">click anywhere to close</div>
+    <div class="popup-timer" id="popupTimer"></div>
+  </div>
+</div>
+
+
+<!-- GAME MODAL -->
+<div id="game-modal" style="display:none;position:fixed;inset:0;z-index:10000;background:rgba(0,0,0,0.95);backdrop-filter:blur(10px);align-items:center;justify-content:center;">
+  <button onclick="closeGame()" style="position:absolute;top:1.5rem;right:1.5rem;background:rgba(255,110,180,0.15);border:1px solid rgba(255,110,180,0.3);color:#fff;width:44px;height:44px;border-radius:50%;font-size:1.2rem;cursor:pointer;z-index:10001;transition:background 0.2s;" onmouseover="this.style.background='rgba(255,110,180,0.4)'" onmouseout="this.style.background='rgba(255,110,180,0.15)'">✕</button>
+  <iframe id="game-iframe" loading="lazy" style="border:none;border-radius:20px;box-shadow:0 0 60px rgba(255,110,180,0.2);width:420px;height:680px;max-width:95vw;max-height:90vh;"></iframe>
+</div>
+
+<script src="script.js" defer></script>
+
+</body>
+</html>
