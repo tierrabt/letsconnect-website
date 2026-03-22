@@ -305,7 +305,10 @@
     pauseAllLoops();
     document.body.classList.add('game-open');
     document.getElementById('game-iframe').src = 'game.html';
-    document.getElementById('game-modal').style.display = 'flex';
+    var modal = document.getElementById('game-modal');
+    modal.style.display = 'flex';
+    modal.style.alignItems = 'center';
+    modal.style.justifyContent = 'center';
   };
 
   window.closeGame = function(){
